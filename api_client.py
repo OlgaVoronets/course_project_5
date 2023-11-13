@@ -10,7 +10,7 @@ class HeadHunterApi:
     headers = {"User-Agent": "AnyApp/1.0"}
 
     def __init__(self, employer_id=None):
-        self.params = {"employer_id": employer_id, "only_with_vacancies": True}
+        self.params = {"employer_id": employer_id, "area": "113", "only_with_vacancies": True}
 
     def get_vacancies_list(self):
         """создает запрос на платформу и получает список словарей с вакансиями в json-формате"""

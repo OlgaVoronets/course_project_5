@@ -19,8 +19,11 @@ class DBManager:
     def print_query_result(self):
         """Вывовдит запрос на печать """
         rows = self.cur.fetchall()
-        for row in rows:
-            print(*row)
+        if rows:
+            for row in rows:
+                print(*row)
+        else:
+            print("По вашему запросу ничего не найдено")
 
     def create_vacancy_table(self) -> None:
         """Создает таблицу вакансий"""
@@ -70,9 +73,6 @@ class DBManager:
 
     def get_vacancies_with_keyword(self, keyword: str):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова"""
-        self.sql = f'SELECT * FROM vacancies WHERE employee LIKE "%{keyword}%" or description LIKE "%{keyword}%";'
-        try:
-            self.execute_query()
-            self.print_query_result()
-        except:
-            print("По вашему запросу ничего не найдено")
+        self.sql = f"SELECT * FROM vacancies WHERE employee LIKE '%{keyword}%';"
+        self.execute_query()
+        self.print_query_result()
