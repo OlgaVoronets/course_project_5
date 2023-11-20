@@ -6,10 +6,13 @@ class DBManager:
     """Класс для работы с базой данных вакансий.
        По умолчанию заданы БД hh_vacancies и таблица vacancies. """
 
-    def __init__(self, database='hh_vacancies', host='localhost', user='postgres', password='12345'):
-        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password)
+    def __init__(self, database='hh_vacancies', host='localhost', user='postgres', password='12345', port='5432'):
+        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password, port=port)
         self.cur = self.connection.cursor()
         self.sql = ''
+        self.database = database
+        self.port = port
+
 
     def execute_query(self):
         """Выполняет запрос"""
