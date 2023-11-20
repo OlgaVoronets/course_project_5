@@ -22,11 +22,12 @@ cur.execute(
 connection.commit()
 cur.close()
 connection.close()
+params.update(database=db_name)
 
 
 """Создаем экземпляр класса DBManager для подключения к БД и работы с ней"""
 
-db = DBManager()
+db = DBManager(**params)
 db.create_vacancy_table()
 
 """Список id заранее выбраных компаний"""
@@ -42,7 +43,7 @@ for emp_id in employer_ides:
     with open(hh_vacancies.file_to_save, encoding='utf8') as f:
         data = json.load(f)
         for dict_ in data:
-            """Выполняется проверка на значения salary. 
+            """Выполняется проверка на значения salary.
             Если данные не указаны работодателем - значения приравниваются к 0
             для возможности дальнейшего сравнения"""
             if not dict_['salary']:
@@ -94,3 +95,6 @@ def data_base_usage(db_object):
 
 
 data_base_usage(db)
+
+
+
