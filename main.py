@@ -28,7 +28,8 @@ params.update(database=db_name)
 """Создаем экземпляр класса DBManager для подключения к БД и работы с ней"""
 
 db = DBManager(**params)
-db.create_vacancy_table()
+db.create_companies_table()
+db.create_vacancies_table()
 
 """Список id заранее выбраных компаний"""
 
@@ -40,6 +41,7 @@ for emp_id in employer_ides:
     hh_vacancies = HeadHunterApi(emp_id)
     data = hh_vacancies.get_vacancies_list()
     hh_vacancies.add_to_json(data)
+    id_list = []    #  Список для проверки уникальности id компаний
     with open(hh_vacancies.file_to_save, encoding='utf8') as f:
         data = json.load(f)
         for dict_ in data:
@@ -55,11 +57,17 @@ for emp_id in employer_ides:
                 salary_to = dict_['salary']['to'] if dict_['salary']['to'] else 0
                 currency = dict_['salary']['currency']
 
-            """Создаем временный словарик для добавления данных в таблицу"""
+            company_id = dict_['company_id']
 
-            temp_list = [dict_['company_id'], dict_['company'], dict_['employee'], dict_['city'],
-                         salary_from, salary_to, currency, dict_['url'], dict_['requirement']]
-            db.fill_vacancy_table(temp_list)
+            """Создаем временные списки для добавления данных в таблицы"""
+            if company_id not in id_list:
+                temp_company_list = [company_id, dict_['company']]
+                db.fill_companies_table(temp_company_list)
+                id_list.append(company_id)
+
+            temp_vacancy_list = [company_id, dict_['employee'], dict_['city'], salary_from, salary_to, currency,
+                                 dict_['url'], dict_['requirement']]
+            db.fill_vacancies_table(temp_vacancy_list)
 
 
 def data_base_usage(db_object):
@@ -67,6 +75,7 @@ def data_base_usage(db_object):
     В качестве аргумента получает объект класса DBManager"""
 
     while True:
+        print()
         print("Выберите действие:")
         print("1 - Получить список всех компаний и количество вакансий у каждой компании")
         print("2 - Получить список всех вакансий")
@@ -108,7 +117,7 @@ ALTER TABLE companies ADD PRIMARY KEY (company_id);
 ALTER TABLE vacancies ADD CONSTRAINT fk_vacancies_company_id FOREIGN KEY (company_id)
 REFRENCES companies (company_id);
 
-ALTER TABLE vacancies DROP COLUMN company_name;  (или не удалять, чтобы запросы не переписывать?) """
+ALTER TABLE vacancies DROP COLUMN company_name;  (или не удалять, чтобы запросы не переписывать) """
 
 
 
