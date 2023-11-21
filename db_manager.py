@@ -6,10 +6,11 @@ class DBManager:
     """Класс для работы с базой данных вакансий.
        По умолчанию заданы БД hh_vacancies и таблица vacancies. """
 
-    def __init__(self, database='hh_vacancies', host='localhost', user='postgres', password='12345'):
-        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password)
+    def __init__(self, database='hh_vacancies', host='localhost', user='postgres', password='12345', port='5432'):
+        self.connection = psycopg2.connect(host=host, database=database, user=user, password=password, port=port)
         self.cur = self.connection.cursor()
         self.sql = ''
+
 
     def execute_query(self):
         """Выполняет запрос"""
@@ -39,6 +40,24 @@ class DBManager:
                     f'url varchar,'
                     f'description text);')
         self.execute_query()
+
+        """ with connection.cursor() as cursor:
+        cursor.execute('CREATE TABLE companies('
+                       'company_id serial PRIMARY KEY,'
+                       'company_name varchar(50) NOT NULL,'
+                       'description text,'
+                       'link varchar(200) NOT NULL,'
+                       'url_vacancies varchar(200) NOT NULL)')
+
+        cursor.execute('CREATE TABLE vacancies('
+                       'vacancy_id serial PRIMARY KEY,'
+                       'company_id int REFERENCES companies (company_id) NOT NULL,'
+                       'title_vacancy varchar(150) NOT NULL,'
+                       'salary int,'
+                       'link varchar(200) NOT NULL,'
+                       'description text,'
+                       'experience varchar(70))')"""
+
 
     def fill_vacancy_table(self, params):
         self.sql = "INSERT INTO vacancies VALUES(%s, '%s', '%s', '%s', %s, %s, '%s', '%s', '%s')" % tuple(params)
