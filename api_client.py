@@ -1,5 +1,6 @@
 import json
 import requests
+from requests.exceptions import RequestException
 
 
 class HeadHunterApi:
@@ -15,7 +16,10 @@ class HeadHunterApi:
     def get_vacancies_list(self):
         """создает запрос на платформу и получает список словарей с вакансиями в json-формате"""
         response = requests.get(self.url, params=self.params, headers=self.headers)
-        return response.json()['items']
+        if response.status_code == 200:
+            return response.json()['items']
+        else:
+            print(f'Ошибка запроса к сайту HeadHunter {response.status_code}')
 
     def add_to_json(self, data, filename=file_to_save):
         """Сохраняет данные из списка словарей в заданном формате """
