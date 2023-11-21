@@ -1,6 +1,5 @@
 import json
 import requests
-from requests.exceptions import RequestException
 
 
 class HeadHunterApi:
