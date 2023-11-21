@@ -97,4 +97,17 @@ def data_base_usage(db_object):
 data_base_usage(db)
 
 
+"""Нормализовать таблицу вакансий с помощью создания отдельной таблицы с компаниями и установки зависимостей:
+
+
+SELECT DISTINCT company_id, company_name INTO companies FROM vacancies;
+
+ALTER TABLE companies ADD PRIMARY KEY (company_id);
+
+ALTER TABLE vacancies ADD CONSTRAINT fk_vacancies_company_id FOREIGN KEY (company_id)
+REFRENCES companies (company_id);
+
+ALTER TABLE vacancies DROP COLUMN company_name;  (или не удалять, чтобы запросы не переписывать?) """
+
+
 
