@@ -4,11 +4,12 @@ version = "0.1.0"
 description = ""
 authors = ["olga voronets <voronets80@gmail.com>"]
 readme = "README.md"
-packages = [{include = "course_project_5"}]
+#packages = [{include = "course_project_5"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 psycopg2 = "^2.9.9"
+requests = "2.31.0"
 
 
 [build-system]
