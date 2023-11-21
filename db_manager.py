@@ -8,12 +8,13 @@ class DBManager:
 
     def __init__(self, database='hh_vacancies', host='localhost', user='postgres', password='12345', port='5432'):
         self.connection = psycopg2.connect(host=host, database=database, user=user, password=password, port=port)
-        self.cur = self.connection.cursor()
+        self.cur = None
         self.sql = ''
 
 
     def execute_query(self):
         """Выполняет запрос"""
+        self.cur = self.connection.cursor()
         self.cur.execute(self.sql)
         self.connection.commit()
 
@@ -25,6 +26,7 @@ class DBManager:
                 print(*row)
         else:
             print("По вашему запросу ничего не найдено")
+        self.cur.close()
 
     def create_vacancy_table(self) -> None:
         """Создает таблицу вакансий"""
@@ -40,28 +42,12 @@ class DBManager:
                     f'url varchar,'
                     f'description text);')
         self.execute_query()
-
-        """ with connection.cursor() as cursor:
-        cursor.execute('CREATE TABLE companies('
-                       'company_id serial PRIMARY KEY,'
-                       'company_name varchar(50) NOT NULL,'
-                       'description text,'
-                       'link varchar(200) NOT NULL,'
-                       'url_vacancies varchar(200) NOT NULL)')
-
-        cursor.execute('CREATE TABLE vacancies('
-                       'vacancy_id serial PRIMARY KEY,'
-                       'company_id int REFERENCES companies (company_id) NOT NULL,'
-                       'title_vacancy varchar(150) NOT NULL,'
-                       'salary int,'
-                       'link varchar(200) NOT NULL,'
-                       'description text,'
-                       'experience varchar(70))')"""
-
+        self.cur.close()
 
     def fill_vacancy_table(self, params):
         self.sql = "INSERT INTO vacancies VALUES(%s, '%s', '%s', '%s', %s, %s, '%s', '%s', '%s')" % tuple(params)
         self.execute_query()
+        self.cur.close()
 
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании"""
