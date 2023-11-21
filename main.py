@@ -95,6 +95,7 @@ def data_base_usage(db_object):
 
 
 data_base_usage(db)
+db.connection.close()
 
 
 """Нормализовать таблицу вакансий с помощью создания отдельной таблицы с компаниями и установки зависимостей:
